@@ -32,10 +32,12 @@
 import "./scss/main.scss";
 import MicroModal from "micromodal";
 
-import { searchBooks } from "./services/openlibrary.js";
+import { searchBooks, getWork, getAuthor } from "./services/openlibrary.js";
+import { getAuthorSummary } from "./services/wikipedia.js";
 import { loadShelf, saveShelf, toggleOnShelf } from "./state/store.js";
 import { skeletonCard, notify } from "./ui/components.js";
 import { renderResults } from "./ui/renderResults.js";
+import { renderBookModal } from "./ui/renderBookModal.js";
 import { renderShelf } from "./ui/renderShelf.js";
 import { debounce } from "./utils/utils.js";
 
@@ -173,27 +175,28 @@ async function onOpenBook(book) {
   modalFooter.innerHTML = "";
   MicroModal.show("modal-book");
 
-  // Placeholder
-  setTimeout(() => {
-    modalContent.innerHTML = `
-      <div class="bookdetail">
-        <div class="bookdetail__media">
-          <img class="bookdetail__cover" alt="${book.title} cover" src="https://via.placeholder.com/300x400?text=Book+Cover" />
-        </div>
-        <div class="bookdetail__body">
-          <div class="bookdetail__meta">
-            <p class="author">${book.author || "Unknown author"}</p>
-            ${book.year ? `<p class="year">First published: ${book.year}</p>` : ""}
-          </div>
-          <div class="bookdetail__desc">Book details will be fully implemented in the next commit with Wikipedia integration!</div>
-        </div>
-      </div>
-    `;
-    modalFooter.innerHTML = `
-      <button class="btn btn--primary">Add to shelf</button>
-      <button class="btn btn--ghost" data-micromodal-close>Close</button>
-    `;
-  }, 1000);
+  try {
+    /** @type {Work} */
+    const work = await getWork(book.workKey);
+    let authorName = book.author || (Array.isArray(work?.authors) && work.authors[0]?.name) || "";
+    /** @type {Author|null} */
+    let authorObj = null;
+    if (Array.isArray(work?.authors) && work.authors[0]?.author?.key) {
+      authorObj = await getAuthor(work.authors[0].author.key);
+      authorName = authorObj?.name || authorName;
+    }
+    /** @type {WikiSummary|null} */
+    const wiki = authorName ? await getAuthorSummary(authorName) : null;
+
+    renderBookModal({
+      modalTitle, modalContent, modalFooter, book, work, author: authorObj, wiki,
+      onToggleShelf,
+      onOpenSubject: navigateToSearch
+    });
+  } catch (e) {
+    console.error(e);
+    modalContent.innerHTML = "<p class=\"error\">Could not load details.</p>";
+  }
 }
 
 window.addEventListener("bookscout:open",   (e) => onOpenBook(/** @type {CustomEvent} */(e).detail.book));
