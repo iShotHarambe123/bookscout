@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <!-- Header -->
     <header class="site-header">
         <div class="site-header__inner">
             <div class="brand">
@@ -37,8 +38,9 @@
         </div>
     </header>
 
-
+    <!-- Main Content-->
     <main id="app" class="app">
+        <!-- Home -->
         <section id="view-home" class="view view--active" aria-labelledby="home-heading">
             <h2 id="home-heading" class="visually-hidden">Home</h2>
 
@@ -48,12 +50,14 @@
             <section id="home-rails" class="home-rails"></section>
         </section>
 
+        <!-- Search -->
         <section id="view-search" class="view" aria-labelledby="search-heading" hidden>
             <h2 id="search-heading" class="visually-hidden">Search Results</h2>
             <div id="results" class="grid"></div>
             <div id="results-status" class="status"></div>
         </section>
 
+        <!-- Shelf (Saved) -->
         <section id="view-saved" class="view" aria-labelledby="saved-heading" hidden>
             <h2 id="saved-heading" class="section-title">Your Shelf</h2>
             <div id="saved-grid" class="grid"></div>
@@ -61,6 +65,7 @@
         </section>
     </main>
 
+    <!-- Modal -->
     <div class="modal micromodal-slide" id="modal-book" aria-hidden="true">
         <div class="modal__overlay" tabindex="-1" data-micromodal-close>
             <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -74,6 +79,7 @@
         </div>
     </div>
 
+    <!-- Footer -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">

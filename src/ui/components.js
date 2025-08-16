@@ -1,4 +1,6 @@
 import { coverUrl } from "../services/openlibrary.js";
+import { coverUrl } from "../services/openlibrary.js";
+import { isOnShelf } from "../state/store.js";
 
 /**
  * Create DOM elements
@@ -46,9 +48,10 @@ export function bookCard(book, { onOpen, onToggleShelf }) {
   const subjects = (book.subjects || []).slice(0, 3);
 
   const updateToggleButton = () => {
+    const onShelf = isOnShelf(book.workKey);
     const toggleBtn = card.querySelector(".toggle");
     if (toggleBtn) {
-      toggleBtn.textContent = "Add"; // Will be updated when shelf functionality is added
+      toggleBtn.textContent = onShelf ? "Remove" : "Add";
     }
   };
 

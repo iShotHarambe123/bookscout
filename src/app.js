@@ -32,8 +32,10 @@
 import "./scss/main.scss";
 
 import { searchBooks } from "./services/openlibrary.js";
+import { loadShelf, saveShelf, toggleOnShelf } from "./state/store.js";
 import { skeletonCard, notify } from "./ui/components.js";
 import { renderResults } from "./ui/renderResults.js";
+import { renderShelf } from "./ui/renderShelf.js";
 import { debounce } from "./utils/utils.js";
 
 /** @type {HTMLInputElement} */ const searchInput   = /** @type {any} */(document.querySelector("#search-input"));
@@ -88,9 +90,7 @@ function route() {
     a.classList.toggle("active", a.getAttribute("href") === hash);
   });
 
-  if (showSaved) {
-    savedStatus.textContent = "Your shelf is empty.";
-  }
+  if (showSaved) renderShelf(savedGrid, savedStatus, { onOpen: onOpenBook, onToggleShelf });
   if (showHome && !homeLoaded) {
     homeHeader.innerHTML = `
       <div class="home-header__copy">
@@ -143,13 +143,17 @@ const doSearch = async (q) => {
   }
 };
 
+loadShelf();
+
 /**
  * Add or remove book from shelf and show notification
  * @param {Book} book
  */
 function onToggleShelf(book) {
-  // Placeholder
-  notify("Shelf functionality coming soon!");
+  const added = toggleOnShelf(book);
+  saveShelf();
+  notify(added ? "Added to your shelf" : "Removed from your shelf");
+  if ((location.hash || "#home") === "#saved") renderShelf(savedGrid, savedStatus, { onOpen: onOpenBook, onToggleShelf });
 }
 
 /**
@@ -157,6 +161,6 @@ function onToggleShelf(book) {
  * @param {Book} book
  */
 async function onOpenBook(book) {
-  // Placeholder
+  // Placeholder for now - will be implemented when modal functionality is added
   notify(`Opening details for "${book.title || "Unknown book"}"`);
 }
