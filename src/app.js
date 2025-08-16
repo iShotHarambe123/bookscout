@@ -30,6 +30,7 @@
  */
 
 import "./scss/main.scss";
+import MicroModal from "micromodal";
 
 import { searchBooks } from "./services/openlibrary.js";
 import { loadShelf, saveShelf, toggleOnShelf } from "./state/store.js";
@@ -70,6 +71,8 @@ applyTheme(localStorage.getItem(THEME_KEY) || (matchMedia("(prefers-color-scheme
 themeToggle.addEventListener("click", () => {
   applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 });
+
+MicroModal.init({ awaitOpenAnimation: true, awaitCloseAnimation: true, disableScroll: true });
 
 let homeLoaded = false;
 
@@ -161,6 +164,37 @@ function onToggleShelf(book) {
  * @param {Book} book
  */
 async function onOpenBook(book) {
-  // Placeholder for now - will be implemented when modal functionality is added
-  notify(`Opening details for "${book.title || "Unknown book"}"`);
+  const modalTitle = document.getElementById("modal-title");
+  const modalContent = document.getElementById("modal-content");
+  const modalFooter = document.getElementById("modal-footer");
+
+  modalTitle.textContent = book.title || "Book details";
+  modalContent.innerHTML = "<div class=\"modal-loading\">Loading details…</div>";
+  modalFooter.innerHTML = "";
+  MicroModal.show("modal-book");
+
+  // Placeholder
+  setTimeout(() => {
+    modalContent.innerHTML = `
+      <div class="bookdetail">
+        <div class="bookdetail__media">
+          <img class="bookdetail__cover" alt="${book.title} cover" src="https://via.placeholder.com/300x400?text=Book+Cover" />
+        </div>
+        <div class="bookdetail__body">
+          <div class="bookdetail__meta">
+            <p class="author">${book.author || "Unknown author"}</p>
+            ${book.year ? `<p class="year">First published: ${book.year}</p>` : ""}
+          </div>
+          <div class="bookdetail__desc">Book details will be fully implemented in the next commit with Wikipedia integration!</div>
+        </div>
+      </div>
+    `;
+    modalFooter.innerHTML = `
+      <button class="btn btn--primary">Add to shelf</button>
+      <button class="btn btn--ghost" data-micromodal-close>Close</button>
+    `;
+  }, 1000);
 }
+
+window.addEventListener("bookscout:open",   (e) => onOpenBook(/** @type {CustomEvent} */(e).detail.book));
+window.addEventListener("bookscout:toggle", (e) => onToggleShelf(/** @type {CustomEvent} */(e).detail.book));
