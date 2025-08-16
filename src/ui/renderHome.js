@@ -33,3 +33,37 @@ export function renderHomeHeader(
     btn.addEventListener("click", () => onSearch && onSearch(btn.dataset.chip));
   });
 }
+
+/**
+ * Render author of the day card
+ * @param {HTMLElement} container
+ * @param {Object} params
+ * @param {string} params.name
+ * @param {import('../app.js').WikiSummary|null|undefined} params.wiki
+ * @param {(name: string) => void} params.onSearchAuthor
+ */
+export function renderAuthorCard(container, { name, wiki, onSearchAuthor }) {
+  const img = wiki?.thumbnail?.source || "";
+  const desc = wiki?.description || "";
+  const extract = wiki?.extract || "No biography available.";
+  const link =
+    wiki?.content_urls?.desktop?.page ||
+    `https://en.wikipedia.org/wiki/${encodeURIComponent((name || "").replace(/\s+/g, "_"))}`;
+
+  container.innerHTML = `
+    <article class="author-day">
+      <div class="author-day__media">${img ? `<img alt="${name}" src="${img}">` : `<div class="avatar"></div>`}</div>
+      <div class="author-day__body">
+        <h3 class="author-day__eyebrow">Author of the Day</h3>
+        <h2 class="author-day__name">${name || "Unknown author"}</h2>
+        <p class="muted">${desc}</p>
+        <p>${extract}</p>
+        <div class="author-day__actions">
+          <button class="btn btn--primary" id="author-search">Search this author</button>
+          <a class="btn btn--ghost" href="${link}" target="_blank" rel="noreferrer">Open on Wikipedia</a>
+        </div>
+      </div>
+    </article>
+  `;
+  container.querySelector("#author-search").addEventListener("click", () => onSearchAuthor(name));
+}

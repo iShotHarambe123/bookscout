@@ -32,7 +32,7 @@
 import "./scss/main.scss";
 import MicroModal from "micromodal";
 
-import { searchBooks, getWork, getAuthor } from "./services/openlibrary.js";
+import { searchBooks, getWork, getAuthor, getBySubject } from "./services/openlibrary.js";
 import { getAuthorSummary } from "./services/wikipedia.js";
 import { loadShelf, saveShelf, toggleOnShelf } from "./state/store.js";
 import { skeletonCard, notify } from "./ui/components.js";
@@ -41,6 +41,7 @@ import { renderBookModal } from "./ui/renderBookModal.js";
 import { renderShelf } from "./ui/renderShelf.js";
 import { debounce } from "./utils/utils.js";
 import { renderHomeHeader } from "./ui/renderHome.js";
+import { renderHomeHeader, renderAuthorCard } from "./ui/renderHome.js";
 
 /** @type {HTMLInputElement} */ const searchInput   = /** @type {any} */(document.querySelector("#search-input"));
 /** @type {HTMLElement} */      const resultsGrid   = document.querySelector("#results");
@@ -195,6 +196,22 @@ async function onOpenBook(book) {
 async function loadHome() {
   try {
     renderHomeHeader(homeHeader, { onSearch: navigateToSearch });
+
+    const classics = await getBySubject("classics", 18);
+    const heroBook = classics[0] || classics[1] || classics[2];
+    let authorName = heroBook?.author || "";
+    let wiki = authorName ? await getAuthorSummary(authorName) : null;
+    if (!wiki) {
+      const fallback = classics.find(b => b.author);
+      authorName = fallback?.author || authorName;
+      wiki = authorName ? await getAuthorSummary(authorName) : null;
+    }
+    renderAuthorCard(homeAuthor, {
+      name: authorName || "Unknown author",
+      wiki,
+      onSearchAuthor: navigateToSearch
+    });
+
     homeLoaded = true;
   } catch (e) {
     console.error(e);
