@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookScout</title>
+    <meta name="description" content="Book discovery that combines Open Library with Wikipedia author bios." />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://covers.openlibrary.org" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../src/scss/main.scss">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="brand">
+                <h1 class="title">BookScout</h1>
+            </div>
+
+            <div class="searchbar" role="search">
+                <label class="visually-hidden" for="search-input">Search books or authors</label>
+                <input id="search-input" type="search" placeholder="Search books or authors..." autocomplete="off" />
+            </div>
+
+            <nav class="actions" aria-label="Primary">
+                <a href="#home" class="nav-link" data-link>Home</a>
+                <a href="#search" class="nav-link" data-link>Search</a>
+                <a href="#saved" class="nav-link" data-link>Saved</a>
+                <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle light/dark">
+                    <span id="theme-emoji" aria-hidden="true">☀️</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+
+    <main id="app" class="app">
+        <section id="view-home" class="view view--active" aria-labelledby="home-heading">
+            <h2 id="home-heading" class="visually-hidden">Home</h2>
+
+            <section id="home-header" class="home-header"></section>
+
+            <section id="home-author" class="home-author"></section>
+            <section id="home-rails" class="home-rails"></section>
+        </section>
+
+        <section id="view-search" class="view" aria-labelledby="search-heading" hidden>
+            <h2 id="search-heading" class="visually-hidden">Search Results</h2>
+            <div id="results" class="grid"></div>
+            <div id="results-status" class="status"></div>
+        </section>
+
+        <section id="view-saved" class="view" aria-labelledby="saved-heading" hidden>
+            <h2 id="saved-heading" class="section-title">Your Shelf</h2>
+            <div id="saved-grid" class="grid"></div>
+            <div id="saved-status" class="status"></div>
+        </section>
+    </main>
+
+    <div class="modal micromodal-slide" id="modal-book" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <header class="modal__header">
+                    <h3 id="modal-title" class="modal__title">Loading...</h3>
+                    <button class="modal__close" aria-label="Close" data-micromodal-close></button>
+                </header>
+                <div class="modal__content" id="modal-content"></div>
+                <footer class="modal__footer" id="modal-footer"></footer>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div>
+                    <h3 class="footer-title">BookScout</h3>
+                    <p class="footer-tagline">Discover classics & hidden gems.</p>
+                </div>
+            </div>
+
+            <nav class="footer-nav" aria-label="Footer">
+                <a href="#home" class="f-link">Home</a>
+                <a href="#search" class="f-link">Search</a>
+                <a href="#saved" class="f-link">Saved</a>
+            </nav>
+
+            <div class="footer-credits">
+                <p>Data from
+                    <a href="https://openlibrary.org" target="_blank" rel="noreferrer">Open Library</a>
+                    &amp;
+                    <a href="https://wikipedia.org" target="_blank" rel="noreferrer">Wikipedia</a>.
+                </p>
+                <p class="small">© 2025 BookScout.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

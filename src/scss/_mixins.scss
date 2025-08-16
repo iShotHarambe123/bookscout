@@ -1,0 +1,65 @@
+@use './variables' as *;
+
+// Media query helper
+@mixin mq($key) {
+  $val: map-get($bp, $key);
+  @if $val {
+    @media (min-width: $val) { @content; }
+  } @else {
+    @warn 'Unknown breakpoint: #{$key}';
+  }
+}
+
+// Media query helper for max-width
+@mixin mq-down($key) {
+  $val: map-get($bp, $key);
+  @if $val {
+    @media (max-width: #{$val - 1px}) { @content; }
+  } @else {
+    @warn 'Unknown breakpoint: #{$key}';
+  }
+}
+
+@mixin focus-ring {
+  &:focus-visible { 
+    outline: none; 
+    box-shadow: var(--shadow-focus); 
+  }
+}
+
+@mixin btn-base {
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center;
+  gap: var(--space-2); 
+  border: 1px solid var(--border); 
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4); 
+  cursor: pointer; 
+  background: var(--panel); 
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+  min-height: 44px;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  @include focus-ring;
+  
+  &:hover { 
+    transform: translateY(-1px); 
+    background: var(--panel-hover);
+    border-color: var(--border-strong);
+  }
+  
+  &:active { 
+    transform: translateY(0); 
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
