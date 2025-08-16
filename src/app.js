@@ -31,6 +31,11 @@
 
 import "./scss/main.scss";
 
+import { searchBooks } from "./services/openlibrary.js";
+import { skeletonCard, notify } from "./ui/components.js";
+import { renderResults } from "./ui/renderResults.js";
+import { debounce } from "./utils/utils.js";
+
 /** @type {HTMLInputElement} */ const searchInput   = /** @type {any} */(document.querySelector("#search-input"));
 /** @type {HTMLElement} */      const resultsGrid   = document.querySelector("#results");
 /** @type {HTMLElement} */      const resultsStatus = document.querySelector("#results-status");
@@ -83,7 +88,6 @@ function route() {
     a.classList.toggle("active", a.getAttribute("href") === hash);
   });
 
-  // Placeholder for future functionality
   if (showSaved) {
     savedStatus.textContent = "Your shelf is empty.";
   }
@@ -105,8 +109,7 @@ route();
 function navigateToSearch(query) {
   searchInput.value = query;
   location.hash = "#search";
-  // Search functionality will be added later
-  resultsStatus.textContent = "Search functionality coming soon...";
+  doSearch(query);
 }
 
 /** Switch to search view when user interacts with search input */
@@ -115,9 +118,45 @@ function ensureSearchView() { if ((location.hash || "#home") !== "#search") loca
 searchInput.addEventListener("focus", ensureSearchView);
 searchInput.addEventListener("mousedown", ensureSearchView);
 searchInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") { 
-    ensureSearchView(); 
-    const q = searchInput.value.trim(); 
-    if (q.length >= 2) navigateToSearch(q); 
-  }
+  if (e.key === "Enter") { ensureSearchView(); const q = searchInput.value.trim(); if (q.length >= 2) doSearch(q); }
 });
+searchInput.addEventListener("input", debounce((e) => doSearch(/** @type {HTMLInputElement} */(e.target).value), 300));
+
+/**
+ * Search books and show results
+ * @param {string} q
+ */
+const doSearch = async (q) => {
+  const query = q.trim();
+  resultsGrid.innerHTML = "";
+  resultsStatus.textContent = "";
+  if (query.length < 2) { resultsStatus.textContent = "Type at least 2 characters to search."; return; }
+
+  resultsGrid.append(...Array.from({ length: 8 }, () => skeletonCard()));
+  try {
+    const data = await searchBooks(query, 24);
+    renderResults({ grid: resultsGrid, statusEl: resultsStatus, books: data, onOpen: onOpenBook, onToggleShelf });
+  } catch (err) {
+    console.error(err);
+    resultsGrid.innerHTML = "";
+    resultsStatus.textContent = "Something went wrong. Please try again.";
+  }
+};
+
+/**
+ * Add or remove book from shelf and show notification
+ * @param {Book} book
+ */
+function onToggleShelf(book) {
+  // Placeholder
+  notify("Shelf functionality coming soon!");
+}
+
+/**
+ * Open book details modal with author info
+ * @param {Book} book
+ */
+async function onOpenBook(book) {
+  // Placeholder
+  notify(`Opening details for "${book.title || "Unknown book"}"`);
+}
