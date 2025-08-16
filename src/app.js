@@ -40,6 +40,7 @@ import { renderResults } from "./ui/renderResults.js";
 import { renderBookModal } from "./ui/renderBookModal.js";
 import { renderShelf } from "./ui/renderShelf.js";
 import { debounce } from "./utils/utils.js";
+import { renderHomeHeader } from "./ui/renderHome.js";
 
 /** @type {HTMLInputElement} */ const searchInput   = /** @type {any} */(document.querySelector("#search-input"));
 /** @type {HTMLElement} */      const resultsGrid   = document.querySelector("#results");
@@ -96,16 +97,7 @@ function route() {
   });
 
   if (showSaved) renderShelf(savedGrid, savedStatus, { onOpen: onOpenBook, onToggleShelf });
-  if (showHome && !homeLoaded) {
-    homeHeader.innerHTML = `
-      <div class="home-header__copy">
-        <p class="home-header__kicker">Discover, decide, read</p>
-        <h2 class="home-header__title">Find your next book</h2>
-        <p class="home-header__tagline">Open Library + Wikipedia author insights, in one fast place.</p>
-      </div>
-    `;
-    homeLoaded = true;
-  }
+  if (showHome && !homeLoaded) loadHome();
 }
 window.addEventListener("hashchange", route);
 route();
@@ -196,6 +188,17 @@ async function onOpenBook(book) {
   } catch (e) {
     console.error(e);
     modalContent.innerHTML = "<p class=\"error\">Could not load details.</p>";
+  }
+}
+
+/** Load home page content */
+async function loadHome() {
+  try {
+    renderHomeHeader(homeHeader, { onSearch: navigateToSearch });
+    homeLoaded = true;
+  } catch (e) {
+    console.error(e);
+    homeRails.innerHTML = `<p class="status">Couldn't load home content.</p>`;
   }
 }
 
