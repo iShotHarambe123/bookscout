@@ -1,3 +1,4 @@
+import { bookCard } from "./components.js";
 /**
  * Render home page header with subject chips
  * @param {HTMLElement} container
@@ -66,4 +67,81 @@ export function renderAuthorCard(container, { name, wiki, onSearchAuthor }) {
     </article>
   `;
   container.querySelector("#author-search").addEventListener("click", () => onSearchAuthor(name));
+}
+
+/**
+ * Render responsive book carousel
+ * @param {HTMLElement} container
+ * @param {Object} params
+ * @param {string} params.title
+ * @param {Array<import('../app.js').Book>} params.books
+ * @param {(b: import('../app.js').Book) => void} params.onOpen
+ * @param {(b: import('../app.js').Book) => void} params.onToggleShelf
+ */
+export function renderCarousel(container, { title, books, onOpen, onToggleShelf }) {
+  const sec = document.createElement("section");
+  sec.className = "home-carousel";
+  sec.setAttribute("role", "region");
+  sec.setAttribute("aria-label", title);
+  sec.innerHTML = `
+    <header class="home-carousel__header">
+      <h3 class="home-carousel__title">${title}</h3>
+    </header>
+    <div class="home-carousel__viewport">
+      <button class="carousel__arrow is-prev" aria-label="Previous"></button>
+      <div class="home-carousel__track"></div>
+      <button class="carousel__arrow is-next" aria-label="Next"></button>
+    </div>
+  `;
+  const track  = sec.querySelector(".home-carousel__track");
+  const btnPrev = sec.querySelector(".carousel__arrow.is-prev");
+  const btnNext = sec.querySelector(".carousel__arrow.is-next");
+  container.appendChild(sec);
+
+  let index = 0;
+  let perView = computePerView();
+
+  function computePerView() {
+    const w = window.innerWidth;
+    if (w < 480) return 1;
+    if (w < 768) return 2;
+    if (w < 1024) return 3;
+    return 4;
+  }
+
+  function draw() {
+    const start = index;
+    const end = Math.min(start + perView, books.length);
+    const slice = books.slice(start, end);
+
+    track.style.setProperty("--cards", String(perView));
+    track.innerHTML = "";
+    const frag = document.createDocumentFragment();
+    for (const b of slice) frag.appendChild(bookCard(b, { onOpen, onToggleShelf }));
+    track.appendChild(frag);
+
+    btnPrev.disabled = start <= 0;
+    btnNext.disabled = end >= books.length;
+  }
+
+  function page(dir) {
+    const step = perView;
+    const maxStart = Math.max(0, books.length - perView);
+    index = Math.min(maxStart, Math.max(0, index + dir * step));
+    draw();
+  }
+
+  btnPrev.addEventListener("click", () => page(-1));
+  btnNext.addEventListener("click", () => page(1));
+
+  window.addEventListener("resize", () => {
+    const next = computePerView();
+    if (next !== perView) {
+      index = Math.floor(index / next) * next;
+      perView = next;
+      draw();
+    }
+  }, { passive: true });
+
+  draw();
 }

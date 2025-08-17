@@ -40,8 +40,7 @@ import { renderResults } from "./ui/renderResults.js";
 import { renderBookModal } from "./ui/renderBookModal.js";
 import { renderShelf } from "./ui/renderShelf.js";
 import { debounce } from "./utils/utils.js";
-import { renderHomeHeader } from "./ui/renderHome.js";
-import { renderHomeHeader, renderAuthorCard } from "./ui/renderHome.js";
+import { renderHomeHeader, renderAuthorCard, renderCarousel } from "./ui/renderHome.js";
 
 /** @type {HTMLInputElement} */ const searchInput   = /** @type {any} */(document.querySelector("#search-input"));
 /** @type {HTMLElement} */      const resultsGrid   = document.querySelector("#results");
@@ -211,6 +210,14 @@ async function loadHome() {
       wiki,
       onSearchAuthor: navigateToSearch
     });
+
+    const [fantasy, mystery] = await Promise.all([
+      getBySubject("fantasy", 24),
+      getBySubject("mystery_and_detective_stories", 24)
+    ]);
+    homeRails.innerHTML = "";
+    renderCarousel(homeRails, { title: "Trending in Fantasy", books: fantasy, onOpen: onOpenBook, onToggleShelf });
+    renderCarousel(homeRails, { title: "Mystery & Crime",    books: mystery, onOpen: onOpenBook, onToggleShelf });
 
     homeLoaded = true;
   } catch (e) {
