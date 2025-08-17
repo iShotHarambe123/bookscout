@@ -8,14 +8,14 @@
  * @property {number=} year
  * @property {number|string=} cover
  * @property {number=} edition_count
- * @property {string[]=} subjects
+ * @property {Array<string>=} subjects
  *
  * @typedef {Object} Work
  * @property {string} key
  * @property {string=} title
  * @property {string=} description
- * @property {{key?: string, name?: string}[]=} authors
- * @property {string[]=} subjects
+ * @property {Array<Object>=} authors
+ * @property {Array<string>=} subjects
  *
  * @typedef {Object} Author
  * @property {string=} name
@@ -25,8 +25,8 @@
  * @property {string} title
  * @property {string=} description
  * @property {string=} extract
- * @property {{source: string}=} thumbnail
- * @property {{desktop?: {page?: string}}=} content_urls
+ * @property {Object=} thumbnail
+ * @property {Object=} content_urls
  */
 
 import "./scss/main.scss";
@@ -39,8 +39,8 @@ import { skeletonCard, notify } from "./ui/components.js";
 import { renderResults } from "./ui/renderResults.js";
 import { renderBookModal } from "./ui/renderBookModal.js";
 import { renderShelf } from "./ui/renderShelf.js";
-import { debounce } from "./utils/utils.js";
 import { renderHomeHeader, renderAuthorCard, renderCarousel } from "./ui/renderHome.js";
+import { debounce } from "./utils/utils.js";
 
 /** @type {HTMLInputElement} */ const searchInput   = /** @type {any} */(document.querySelector("#search-input"));
 /** @type {HTMLElement} */      const resultsGrid   = document.querySelector("#results");

@@ -8,14 +8,14 @@
  * @property {number=} year
  * @property {number|string=} cover
  * @property {number=} edition_count
- * @property {string[]=} subjects
+ * @property {Array<string>=} subjects
  *
  * @typedef {Object} Work
  * @property {string} key
  * @property {string=} title
  * @property {string=} description
- * @property {{key?: string, name?: string}[]=} authors
- * @property {string[]=} subjects
+ * @property {Array<Object>=} authors
+ * @property {Array<string>=} subjects
  */
 
 const OL = "https://openlibrary.org";

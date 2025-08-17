@@ -1,0 +1,12 @@
+{
+  "source": {
+    "include": ["src"],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(^|\\/|\\\\)scss"
+  },
+  "opts": {
+    "destination": "dist/docs",
+    "recurse": true,
+    "verbose": true
+  }
+}

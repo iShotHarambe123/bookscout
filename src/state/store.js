@@ -10,7 +10,7 @@
  */
 
 const SHELF_KEY = "bookscout:shelf";
-/** @type {ShelfItem[]} */
+/** @type {Array<ShelfItem>} */
 let shelf = [];
 
 /** Load shelf from localStorage */
@@ -43,7 +43,7 @@ export function isOnShelf(workKey) {
 
 /**
  * Add or remove book from shelf
- * @param {import('../app.js').Book} book
+ * @param {Object} book
  */
 export function toggleOnShelf(book) {
   const idx = shelf.findIndex(b => b.workKey === book.workKey);

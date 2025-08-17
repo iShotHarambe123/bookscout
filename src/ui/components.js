@@ -1,12 +1,11 @@
 import { coverUrl } from "../services/openlibrary.js";
-import { coverUrl } from "../services/openlibrary.js";
 import { isOnShelf } from "../state/store.js";
 
 /**
- * Create DOM elements
- * @param {keyof HTMLElementTagNameMap} tag
- * @param {Partial<HTMLElement>=} props
- * @param {...(Node|string|number|null|undefined)} children
+ * Create DOM element
+ * @param {string} tag
+ * @param {Object=} props
+ * @param {...*} children
  */
 export function el(tag, props = {}, ...children) {
   const node = Object.assign(document.createElement(tag), props);
@@ -19,7 +18,7 @@ export function el(tag, props = {}, ...children) {
 
 /**
  * Get emoji icon by name
- * @param {"add"|"remove"|"open"|"star"} name
+ * @param {string} name
  */
 export function icon(name) {
   const map = { add: "➕", remove: "➖", open: "📖", star: "⭐" };
@@ -40,8 +39,8 @@ export function skeletonCard() {
 
 /**
  * Create book card with action buttons
- * @param {import('../app.js').Book} book
- * @param {{ onOpen: (b: import('../app.js').Book) => void, onToggleShelf: (b: import('../app.js').Book) => void }} handlers
+ * @param {Object} book
+ * @param {Object} handlers
  */
 export function bookCard(book, { onOpen, onToggleShelf }) {
   const card = el("article", { className: "card" });
@@ -88,10 +87,10 @@ export function bookCard(book, { onOpen, onToggleShelf }) {
  * Render book grid with status
  * @param {HTMLElement} grid
  * @param {HTMLElement} statusEl
- * @param {Array<import('../app.js').Book>} books
+ * @param {Array<Object>} books
  * @param {string} emptyMessage
- * @param {(book: import('../app.js').Book) => void} onOpen
- * @param {(book: import('../app.js').Book) => void} onToggleShelf
+ * @param {Function} onOpen
+ * @param {Function} onToggleShelf
  */
 export function renderBookGrid(grid, statusEl, books, emptyMessage, onOpen, onToggleShelf) {
   grid.innerHTML = "";

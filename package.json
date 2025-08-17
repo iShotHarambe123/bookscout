@@ -5,17 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "parcel public/index.html",
-    "build": "parcel build public/index.html --public-url ./",
+    "docs:dist": "jsdoc -c jsdoc.json",
+  "build": "parcel build public/index.html --public-url ./ && npm run docs:dist",
     "start": "parcel public/index.html",
     "serve": "npm run dev"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.15.4",
+    "jsdoc": "^4.0.4",
     "parcel": "^2.12.0",
     "sass": "^1.77.0"
   },
   "dependencies": {
     "micromodal": "^0.4.10"
   },
-  "browserslist": [">0.5%", "last 2 versions", "not dead"]
+  "browserslist": [
+    ">0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
 }

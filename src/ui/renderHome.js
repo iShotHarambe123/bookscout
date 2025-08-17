@@ -6,8 +6,8 @@ import { bookCard } from "./components.js";
  * @param {string} [opts.kicker="Discover, decide, read"]
  * @param {string} [opts.title="Find your next book"]
  * @param {string} [opts.tagline="Open Library + Wikipedia author insights, in one fast place."]
- * @param {string[]} [opts.chips=["Fantasy","Mystery","Romance","Science Fiction","History"]]
- * @param {(chip: string) => void} [opts.onSearch]
+ * @param {Array<string>} [opts.chips=["Fantasy","Mystery","Romance","Science Fiction","History"]]
+ * @param {Function} [opts.onSearch]
  */
 export function renderHomeHeader(
   container,
@@ -40,8 +40,8 @@ export function renderHomeHeader(
  * @param {HTMLElement} container
  * @param {Object} params
  * @param {string} params.name
- * @param {import('../app.js').WikiSummary|null|undefined} params.wiki
- * @param {(name: string) => void} params.onSearchAuthor
+ * @param {Object} params.wiki
+ * @param {Function} params.onSearchAuthor
  */
 export function renderAuthorCard(container, { name, wiki, onSearchAuthor }) {
   const img = wiki?.thumbnail?.source || "";
@@ -74,9 +74,9 @@ export function renderAuthorCard(container, { name, wiki, onSearchAuthor }) {
  * @param {HTMLElement} container
  * @param {Object} params
  * @param {string} params.title
- * @param {Array<import('../app.js').Book>} params.books
- * @param {(b: import('../app.js').Book) => void} params.onOpen
- * @param {(b: import('../app.js').Book) => void} params.onToggleShelf
+ * @param {Array<Object>} params.books
+ * @param {Function} params.onOpen
+ * @param {Function} params.onToggleShelf
  */
 export function renderCarousel(container, { title, books, onOpen, onToggleShelf }) {
   const sec = document.createElement("section");

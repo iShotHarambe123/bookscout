@@ -7,12 +7,12 @@ import { isOnShelf } from "../state/store.js";
  * @param {HTMLElement} params.modalTitle
  * @param {HTMLElement} params.modalContent
  * @param {HTMLElement} params.modalFooter
- * @param {import('../app.js').Book} params.book
- * @param {import('../app.js').Work} params.work
- * @param {import('../app.js').Author|null|undefined} params.author
- * @param {import('../app.js').WikiSummary|null|undefined} params.wiki
- * @param {(b: import('../app.js').Book) => void} params.onToggleShelf
- * @param {(subject: string) => void} params.onOpenSubject
+ * @param {Object} params.book
+ * @param {Object} params.work
+ * @param {Object} params.author
+ * @param {Object} params.wiki
+ * @param {Function} params.onToggleShelf
+ * @param {Function} params.onOpenSubject
  */
 export function renderBookModal({ modalTitle, modalContent, modalFooter, book, work, author, wiki, onToggleShelf, onOpenSubject }) {
   modalTitle.textContent = book.title || work?.title || "Book";
@@ -76,7 +76,7 @@ export function renderBookModal({ modalTitle, modalContent, modalFooter, book, w
 
 /**
  * Escape HTML characters
- * @param {unknown} str
+ * @param {*} str
  */
 function escapeHtml(str) {
   return String(str).replace(/[&<>\"']/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));
